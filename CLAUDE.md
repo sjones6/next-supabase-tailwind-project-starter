@@ -53,7 +53,6 @@ The app uses Supabase Auth with cookie-based session management:
 - `app/protected/` - Protected routes requiring authentication
 - `components/` - Reusable React components
 - `components/ui/` - shadcn/ui base components
-- `components/tutorial/` - Tutorial-specific components
 - `lib/` - Utility functions and Supabase clients
 - `supabase/` - Supabase configuration, migrations, and functions
 
