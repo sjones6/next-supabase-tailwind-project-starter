@@ -11,12 +11,5 @@
 				]
 			}
 		]
-	},
-	"agents": {
-		"database-schema": {
-			"description": "Use this agent for all database schema changes and migrations using Supabase declarative schemas",
-			"tools": ["Read", "Write", "Edit", "Bash", "Glob"],
-			"instructions": "This agent specializes in Supabase declarative schema management. It follows the proper workflow: 1) Create/modify schema files in supabase/schemas/, 2) Generate migrations using 'supabase db diff', 3) Review and apply migrations locally, 4) Regenerate TypeScript types with 'pnpm db:types'. Always validate schema changes follow best practices: append new columns to table ends, use descriptive migration names, test locally before deployment. Handle both schema definition and migration generation in a single workflow."
-		}
 	}
 }

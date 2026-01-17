@@ -1,6 +1,17 @@
 {
 	"permissions": {
-		"allow": ["WebFetch(domain:supabase.com)"],
+		"allow": [
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:deno.land)",
+      "WebFetch(domain:npmjs.com)",
+      "WebFetch(domain:shadcn.com)",
+      "WebFetch(domain:tailwindcss.com)",
+      "WebFetch(domain:biomejs.dev)",
+      "WebFetch(domain:claude.ai)",
+      "WebFetch(domain:nextjs.org)",
+      "WebFetch(domain:react.dev)",
+      "WebFetch(domain:reactrouter.com)"
+    ],
 		"deny": [],
 		"ask": []
 	}
