@@ -250,23 +250,84 @@ Components are installed to `components/ui/`.
 
 ## Deployment
 
-### Vercel (Recommended)
+This guide covers deploying your Next.js app to Vercel and your Supabase backend to Supabase Cloud, with optional GitHub Actions CI/CD.
+
+### 1. Supabase Production Setup
+
+#### Create a Supabase Project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. Note your project credentials from **Settings > API**:
+   - **Project URL**: `https://<project-ref>.supabase.co`
+   - **Anon/Publishable Key**: Used in the Next.js app
+   - **Service Role Key**: Used for server-side operations (keep secret)
+3. Note your **Project Reference ID** from **Settings > General** (the `<project-ref>` part of your URL)
+
+#### Configure Redirect URLs
+
+For authentication to work in production, you must configure allowed redirect URLs:
+
+1. Go to **Authentication > URL Configuration** in your Supabase dashboard
+2. Set **Site URL** to your production domain (e.g., `https://your-app.vercel.app`)
+3. Add **Redirect URLs** for all environments where users will authenticate:
+   ```
+   https://your-app.vercel.app/**
+   https://your-preview-urls.vercel.app/**
+   http://localhost:3000/**
+   ```
+
+   > **Note**: Use wildcard patterns (`/**`) to allow all paths. Include localhost for local development against production Supabase.
+
+### 2. Vercel Deployment
 
 1. Push your code to GitHub
 2. Import the project in [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard
+3. Add the following **Environment Variables** in the Vercel dashboard:
+
+   | Variable | Value |
+   |----------|-------|
+   | `NEXT_PUBLIC_SUPABASE_URL` | `https://<project-ref>.supabase.co` |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Your Supabase anon/publishable key |
+
 4. Deploy
 
-### Supabase Production
+> **Tip**: For preview deployments, Vercel generates unique URLs. Make sure to add a wildcard pattern for your Vercel preview URLs in Supabase's redirect URL configuration.
 
-1. Create a project at [supabase.com](https://supabase.com)
-2. Link your local project:
-   ```bash
-   supabase link --project-ref <project-id>
-   ```
-3. Push migrations:
-   ```bash
-   supabase db push
+### 3. GitHub Actions CI/CD
+
+This project includes GitHub Actions workflows for automated testing and Supabase deployment. To enable the Supabase deployment workflow:
+
+#### Required Secrets
+
+Add these in **GitHub > Settings > Secrets and variables > Actions > Secrets**:
+
+| Secret | Description | How to Get |
+|--------|-------------|------------|
+| `SUPABASE_ACCESS_TOKEN` | Personal access token for Supabase CLI | Generate at [supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens) |
+| `SUPABASE_PRODUCTION_DB_PASSWORD` | Your production database password | Set during project creation, or reset in **Settings > Database** |
+
+#### Required Variables
+
+Add these in **GitHub > Settings > Secrets and variables > Actions > Variables**:
+
+| Variable | Description | How to Get |
+|----------|-------------|------------|
+| `SUPABASE_PROJECT_ID` | Your project reference ID | Found in **Settings > General** (e.g., `abcdefghijklmnop`) |
+| `ALLOWED_ORIGINS` | The allowed origins for CORS | A comma-separated list of origins (e.g., `https://your-app.vercel.app,https://your-preview-urls.vercel.app,http://localhost:3000`) |
+
+#### Adding Additional Secrets for Edge Functions
+
+If your edge functions need environment variables (e.g., API keys), add them to the GitHub Secrets and Variables:
+
+   ```yaml
+   env:
+     # ... existing env vars
+     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+   # In the "Set Supabase secrets" step:
+   - name: Set Supabase secrets
+     run: |
+       supabase secrets set OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
    ```
 
 ## License

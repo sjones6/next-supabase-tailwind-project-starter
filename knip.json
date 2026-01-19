@@ -1,4 +1,8 @@
 {
-	"ignore": ["src/lib/supabase-types.ts", "supabase/functions/**"],
-	"ignoreDependencies": ["tailwindcss-animate"]
+	"ignore": [
+		"lib/supabase-types.ts",
+		"supabase/functions/**",
+		"components/ui/**"
+	],
+	"ignoreBinaries": ["test:*"]
 }
