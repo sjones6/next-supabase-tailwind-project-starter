@@ -25,6 +25,11 @@ This is a Next.js application with Supabase backend for authentication and data 
 - `pnpm preflight` - Run format, lint, and build (comprehensive check)
 - `pnpm knip` - Remove unused dependencies
 
+### Testing
+- `pnpm test` - Run all tests (Next.js + database) concurrently
+- `pnpm test:next` - Run Next.js/UI tests only (vitest)
+- `pnpm test:db` - Run database tests only (pgTAP)
+
 ### Database Management
 - `pnpm db:migrate` - Run database migrations and regenerate types
 - `pnpm db:reset` - Reset local database and regenerate types
@@ -69,6 +74,33 @@ Required environment variables (copy from `.env.example`):
 - **UI Components**: shadcn/ui with Radix UI primitives
 - **Theme**: next-themes for dark/light mode switching
 
+## Testing
+
+### Next.js/UI Tests (Vitest)
+This project uses **Vitest** with **React Testing Library** for UI testing.
+
+**Test File Convention:**
+- Place test files directly next to the file being tested
+- Use the naming pattern `{filename}.test.ts` or `{filename}.test.tsx`
+- Example: `components/ui/button.tsx` → `components/ui/button.test.tsx`
+- Do NOT use a separate `__tests__` directory
+
+### Database Tests (pgTAP)
+Database tests use **pgTAP** and live in `supabase/tests/database/`.
+
+**Test File Convention:**
+- Place test files in `supabase/tests/database/`
+- Use the naming pattern `{name}.test.sql`
+
+**Available Test Helpers** (from `tests` schema):
+- `tests.create_supabase_user(identifier, email?, phone?, metadata?)` - Create test users
+- `tests.get_supabase_uid(identifier)` - Get test user UUID
+- `tests.authenticate_as(identifier)` - Simulate authenticated user
+- `tests.authenticate_as_service_role()` - Simulate service role
+- `tests.clear_authentication()` - Reset to anon role
+- `tests.rls_enabled(schema, table?)` - Verify RLS is enabled
+- `tests.freeze_time(timestamp)` / `tests.unfreeze_time()` - Time manipulation
+
 ## Database Schema Management
 
 This project uses Supabase **declarative schemas** for database management. This approach focuses on declaring the desired end state rather than writing step-by-step migrations.
@@ -100,3 +132,11 @@ When making database changes, use the `database-schema` sub-agent which handles:
 - Use absolute imports with `@/` prefix for components and lib files
 - Database types are auto-generated in `lib/supabase-types.ts`
 - Supabase functions share types via `supabase/functions/_shared/`
+
+## Maintaining This Documentation
+
+When developing, any new conventions, patterns, or best practices discovered should be codified:
+- **Project-wide conventions**: Add to this `CLAUDE.md` file
+- **Domain-specific patterns**: Add to the appropriate sub-agent configuration (e.g., database conventions go in the `database-schema` agent, UI patterns in the `ui-component-builder` agent)
+
+This ensures institutional knowledge is preserved and consistently applied across future development sessions.

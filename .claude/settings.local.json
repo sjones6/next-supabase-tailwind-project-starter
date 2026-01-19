@@ -10,7 +10,13 @@
 			"WebFetch(domain:claude.ai)",
 			"WebFetch(domain:nextjs.org)",
 			"WebFetch(domain:react.dev)",
-			"WebFetch(domain:reactrouter.com)"
+			"WebFetch(domain:reactrouter.com)",
+			"Bash(pnpm add:*)",
+			"Bash(pnpm test:run:*)",
+			"Bash(pnpm db:status:*)",
+			"Bash(pnpm db:test:*)",
+			"Bash(pnpm db:migrate:*)",
+			"Bash(pnpm test:all:*)"
 		],
 		"deny": [],
 		"ask": []
