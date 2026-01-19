@@ -76,6 +76,10 @@ Required environment variables (copy from `.env.example`):
 
 ## Testing
 
+**All features must include appropriate tests.** This includes:
+- **UI/Component tests**: Vitest with React Testing Library for any new components or UI changes
+- **Database tests**: pgTAP tests for any database schema changes, **including RLS policy verification**
+
 ### Next.js/UI Tests (Vitest)
 This project uses **Vitest** with **React Testing Library** for UI testing.
 
@@ -85,12 +89,39 @@ This project uses **Vitest** with **React Testing Library** for UI testing.
 - Example: `components/ui/button.tsx` → `components/ui/button.test.tsx`
 - Do NOT use a separate `__tests__` directory
 
+**Testing Style - Table-Driven Tests:**
+- Prefer table-driven tests using `it.each` for testing multiple scenarios
+- Define test cases as a typed array of objects with descriptive properties
+- Use named variables in the test callback for clarity
+
+```tsx
+const testCases: { name: string; value: number; expected: string }[] = [
+  { name: "positive", value: 10, expected: "+10%" },
+  { name: "negative", value: -5, expected: "-5%" },
+  { name: "zero", value: 0, expected: "0%" },
+];
+
+it.each(testCases)(
+  "displays $name change correctly",
+  ({ value, expected }) => {
+    render(<StatsCard change={value} />);
+    expect(screen.getByText(expected)).toBeInTheDocument();
+  }
+);
+```
+
 ### Database Tests (pgTAP)
 Database tests use **pgTAP** and live in `supabase/tests/database/`.
 
 **Test File Convention:**
 - Place test files in `supabase/tests/database/`
 - Use the naming pattern `{name}.test.sql`
+
+**RLS Testing Requirements:**
+- All database tests MUST verify RLS is enabled using `tests.rls_enabled()`
+- Test that authenticated users can only access their own data
+- Test that unauthenticated users cannot access protected data
+- Test all CRUD operations against RLS policies
 
 **Available Test Helpers** (from `tests` schema):
 - `tests.create_supabase_user(identifier, email?, phone?, metadata?)` - Create test users
@@ -132,6 +163,15 @@ When making database changes, use the `database-schema` sub-agent which handles:
 - Use absolute imports with `@/` prefix for components and lib files
 - Database types are auto-generated in `lib/supabase-types.ts`
 - Supabase functions share types via `supabase/functions/_shared/`
+
+## Before Completing Work
+
+**Always run `pnpm preflight` before finishing any task.** This command runs formatting, linting, and builds to catch any issues. Fix all errors before considering work complete.
+
+Checklist before completing a feature:
+- [ ] Unit tests written and passing (`pnpm test:next`)
+- [ ] Database tests written with RLS checks (`pnpm test:db`) - if applicable
+- [ ] `pnpm preflight` passes with no errors
 
 ## Maintaining This Documentation
 

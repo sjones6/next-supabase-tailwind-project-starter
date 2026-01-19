@@ -164,6 +164,56 @@ If you encounter issues:
 2. **Type generation fails**: Check that Supabase is running with `pnpm db:status`
 3. **RLS blocking access**: Verify policies with `select * from pg_policies`
 
+## Database Testing Requirements
+
+**All schema changes must include pgTAP tests with RLS verification.**
+
+Test files go in `supabase/tests/database/` with the naming pattern `{name}.test.sql`.
+
+### Required Test Coverage
+1. **RLS Enabled Check**: Use `tests.rls_enabled('public', '<table_name>')` for every new table
+2. **Authenticated User Access**: Test that users can only access their own data
+3. **Unauthenticated Access**: Test that anon role cannot access protected data
+4. **CRUD Operations**: Test all operations (SELECT, INSERT, UPDATE, DELETE) against RLS policies
+
+### Test Helpers
+- `tests.create_supabase_user(identifier)` - Create test users
+- `tests.authenticate_as(identifier)` - Simulate authenticated user
+- `tests.clear_authentication()` - Reset to anon role
+- `tests.rls_enabled(schema, table)` - Verify RLS is enabled
+
+### Example RLS Test Pattern
+```sql
+BEGIN;
+SELECT plan(4);
+
+-- Test RLS is enabled
+SELECT tests.rls_enabled('public', 'my_table');
+
+-- Create test users
+SELECT tests.create_supabase_user('user_a');
+SELECT tests.create_supabase_user('user_b');
+
+-- Test user can only see own records
+SELECT tests.authenticate_as('user_a');
+SELECT is(
+  (SELECT count(*) FROM public.my_table WHERE user_id != tests.get_supabase_uid('user_a'))::int,
+  0,
+  'User A cannot see other users records'
+);
+
+-- Test anon cannot access
+SELECT tests.clear_authentication();
+SELECT is(
+  (SELECT count(*) FROM public.my_table)::int,
+  0,
+  'Anonymous users cannot access records'
+);
+
+SELECT * FROM finish();
+ROLLBACK;
+```
+
 ## Quality Checklist
 
 Before completing any schema change, verify:
@@ -175,6 +225,8 @@ Before completing any schema change, verify:
 - [ ] Migration applied locally with `pnpm db:migrate`
 - [ ] TypeScript types regenerated and correct
 - [ ] New columns appended to end of tables (not inserted in middle)
+- [ ] **pgTAP tests written with RLS verification** (`pnpm test:db`)
+- [ ] **`pnpm preflight` passes with no errors**
 
 ## Communication Style
 

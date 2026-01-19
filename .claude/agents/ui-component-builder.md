@@ -68,6 +68,57 @@ Common components: button, card, input, label, select, dialog, dropdown-menu, ta
 - Inputs: Apply `h-8` or `h-9` for compact height
 - Use `variant="ghost"` for less prominent actions
 
+## Testing Requirements
+
+**All new components must include unit tests using Vitest and React Testing Library.**
+
+### Test File Convention
+- Place test files next to the component: `{component}.test.tsx`
+- Example: `components/stats-card.tsx` → `components/stats-card.test.tsx`
+- Do NOT use a separate `__tests__` directory
+
+### What to Test
+- Component renders without crashing
+- Props are correctly applied
+- User interactions work as expected
+- Conditional rendering logic
+- Accessibility (aria labels, roles)
+
+### Testing Style - Table-Driven Tests
+- **Prefer table-driven tests** using `it.each` for testing multiple scenarios
+- Define test cases as a **typed array of objects** with descriptive properties
+- Use **named variables** in the test callback for clarity
+
+### Example Test Pattern
+```tsx
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { StatsCard } from "./stats-card";
+
+describe("StatsCard", () => {
+  it("renders the title and value", () => {
+    render(<StatsCard title="Revenue" value="$1,234" change={5} />);
+    expect(screen.getByText("Revenue")).toBeInTheDocument();
+    expect(screen.getByText("$1,234")).toBeInTheDocument();
+  });
+
+  // Table-driven test for multiple scenarios
+  const changeDisplayCases: { name: string; change: number; expected: string }[] = [
+    { name: "positive", change: 10, expected: "+10%" },
+    { name: "negative", change: -5, expected: "-5%" },
+    { name: "zero", change: 0, expected: "0%" },
+  ];
+
+  it.each(changeDisplayCases)(
+    "displays $name change as $expected",
+    ({ change, expected }) => {
+      render(<StatsCard title="Test" value="100" change={change} />);
+      expect(screen.getByText(expected)).toBeInTheDocument();
+    }
+  );
+});
+```
+
 ## Quality Checklist
 Before completing any component, verify:
 - [ ] Component is as compact as possible while remaining usable
@@ -77,6 +128,8 @@ Before completing any component, verify:
 - [ ] Responsive behavior is considered
 - [ ] No unnecessary wrapper divs or spacing
 - [ ] Imports use `@/` prefix
+- [ ] **Unit tests written and passing** (`pnpm test:next`)
+- [ ] **`pnpm preflight` passes with no errors**
 
 ## Example Compact Component Pattern
 ```tsx
