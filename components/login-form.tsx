@@ -51,16 +51,18 @@ export function LoginForm({
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-2xl">Login</CardTitle>
-					<CardDescription>
+					<CardTitle className="text-xl">Login</CardTitle>
+					<CardDescription className="text-xs">
 						Enter your email below to login to your account
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleLogin}>
-						<div className="flex flex-col gap-6">
-							<div className="grid gap-2">
-								<Label htmlFor="email">Email</Label>
+						<div className="flex flex-col gap-4">
+							<div className="grid gap-1.5">
+								<Label htmlFor="email" size="sm">
+									Email
+								</Label>
 								<Input
 									id="email"
 									type="email"
@@ -68,14 +70,17 @@ export function LoginForm({
 									required
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
+									size="sm"
 								/>
 							</div>
-							<div className="grid gap-2">
+							<div className="grid gap-1.5">
 								<div className="flex items-center">
-									<Label htmlFor="password">Password</Label>
+									<Label htmlFor="password" size="sm">
+										Password
+									</Label>
 									<Link
 										href="/auth/forgot-password"
-										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+										className="ml-auto inline-block text-xs underline-offset-4 hover:underline"
 									>
 										Forgot your password?
 									</Link>
@@ -86,14 +91,20 @@ export function LoginForm({
 									required
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
+									size="sm"
 								/>
 							</div>
-							{error && <p className="text-sm text-red-500">{error}</p>}
-							<Button type="submit" className="w-full" disabled={isLoading}>
+							{error && <p className="text-xs text-red-500">{error}</p>}
+							<Button
+								type="submit"
+								className="w-full"
+								disabled={isLoading}
+								size="sm"
+							>
 								{isLoading ? "Logging in..." : "Login"}
 							</Button>
 						</div>
-						<div className="mt-4 text-center text-sm">
+						<div className="mt-3 text-center text-xs">
 							Don&apos;t have an account?{" "}
 							<Link
 								href="/auth/sign-up"

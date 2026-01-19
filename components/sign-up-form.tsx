@@ -60,14 +60,18 @@ export function SignUpForm({
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-2xl">Sign up</CardTitle>
-					<CardDescription>Create a new account</CardDescription>
+					<CardTitle className="text-xl">Sign up</CardTitle>
+					<CardDescription className="text-xs">
+						Create a new account
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSignUp}>
-						<div className="flex flex-col gap-6">
-							<div className="grid gap-2">
-								<Label htmlFor="email">Email</Label>
+						<div className="flex flex-col gap-4">
+							<div className="grid gap-1.5">
+								<Label htmlFor="email" size="sm">
+									Email
+								</Label>
 								<Input
 									id="email"
 									type="email"
@@ -75,11 +79,14 @@ export function SignUpForm({
 									required
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
+									size="sm"
 								/>
 							</div>
-							<div className="grid gap-2">
+							<div className="grid gap-1.5">
 								<div className="flex items-center">
-									<Label htmlFor="password">Password</Label>
+									<Label htmlFor="password" size="sm">
+										Password
+									</Label>
 								</div>
 								<Input
 									id="password"
@@ -87,11 +94,14 @@ export function SignUpForm({
 									required
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
+									size="sm"
 								/>
 							</div>
-							<div className="grid gap-2">
+							<div className="grid gap-1.5">
 								<div className="flex items-center">
-									<Label htmlFor="repeat-password">Repeat Password</Label>
+									<Label htmlFor="repeat-password" size="sm">
+										Repeat Password
+									</Label>
 								</div>
 								<Input
 									id="repeat-password"
@@ -99,14 +109,20 @@ export function SignUpForm({
 									required
 									value={repeatPassword}
 									onChange={(e) => setRepeatPassword(e.target.value)}
+									size="sm"
 								/>
 							</div>
-							{error && <p className="text-sm text-red-500">{error}</p>}
-							<Button type="submit" className="w-full" disabled={isLoading}>
+							{error && <p className="text-xs text-red-500">{error}</p>}
+							<Button
+								type="submit"
+								className="w-full"
+								disabled={isLoading}
+								size="sm"
+							>
 								{isLoading ? "Creating an account..." : "Sign up"}
 							</Button>
 						</div>
-						<div className="mt-4 text-center text-sm">
+						<div className="mt-3 text-center text-xs">
 							Already have an account?{" "}
 							<Link href="/auth/login" className="underline underline-offset-4">
 								Login

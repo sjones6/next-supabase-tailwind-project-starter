@@ -11,7 +11,7 @@ async function UserInfo() {
 	}
 
 	return (
-		<p className="text-muted-foreground">
+		<p className="text-sm text-muted-foreground">
 			You are logged in as {data.user.email}
 		</p>
 	);
@@ -19,9 +19,11 @@ async function UserInfo() {
 
 export default function ProtectedPage() {
 	return (
-		<div className="flex-1 w-full flex flex-col gap-12">
-			<h1 className="text-2xl font-bold">Protected Page</h1>
-			<Suspense fallback={<p className="text-muted-foreground">Loading...</p>}>
+		<div className="flex-1 w-full flex flex-col gap-6">
+			<h1 className="text-xl font-bold">Protected Page</h1>
+			<Suspense
+				fallback={<p className="text-sm text-muted-foreground">Loading...</p>}
+			>
 				<UserInfo />
 			</Suspense>
 		</div>

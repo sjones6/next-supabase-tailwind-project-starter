@@ -16,7 +16,8 @@
 			"Bash(pnpm db:status:*)",
 			"Bash(pnpm db:test:*)",
 			"Bash(pnpm db:migrate:*)",
-			"Bash(pnpm test:all:*)"
+			"Bash(pnpm test:all:*)",
+			"Bash(pnpm preflight:*)"
 		],
 		"deny": [],
 		"ask": []
